@@ -144,3 +144,22 @@ La función debe retornar:
 - UrlTree: Redirige a otra URL.
 - También puede retornar un Observable<boolean | UrlTree> o Promise si se hacen llamadas asincronas.
 
+## Interceptores
+
+Son middlewares de Angular para HTTP. Filtran todas las peticiones que entran y salen de las APIs. Ahora se utilizan funciones HttpInterceptorFn en lugar de clases. 
+
+Consta de:
+
+1. La firma de la función. 
+2. Inyección de dependencias. 
+3. Clonación de la petición. 
+4. Pipeline de respuesta.
+
+
+### 1. La firma de la función.
+
+### 2. Inyección de dependencias.
+
+### 3. Clonación de la petición.
+
+### 4. Pipeline de respuesta
