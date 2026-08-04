@@ -144,3 +144,69 @@ La función debe retornar:
 - UrlTree: Redirige a otra URL.
 - También puede retornar un Observable<boolean | UrlTree> o Promise si se hacen llamadas asincronas.
 
+## Interceptores
+
+Los interceptores son el middleware de Angular para HTTP. Son los filtros para las peticione entrantes y salientes de una API.
+
+Consta de:
+
+1. La firma de la función.
+2. Inyección de dependencias.
+3. Clonación de la petición.
+4. El pipeline de respuesta.
+
+### 1. La firma de la función
+
+- req: La petición saliente (HttpRequest). Es inmutable.
+- next: El manejador (HttpResponse). Si no se llama a next.handle, la peticion muere sin llegar al servidor.
+
+### 2. Inyección de dependecias
+
+Dentro del body, se usa inject() para obtener servicios (Auth, Router, etc.), igual que en los guards.
+
+### 3. Clonación de la petición
+
+Para agregar headers, se debe clonar la petición req (inmutable).
+
+### 4. El pipeline de respuesta
+
+next.handle() devuelve un Obervable\<HttpEvent>. Aqui se aplica pipe() con operadores RxJS para:
+
+- tap(): Para inspeccionar la respuesta sin modificarla (logging, refrescar token).
+- catchError(): Para atrapar errores HTTP globalmente y redirigir al login.
+
+## Pipes
+
+Los pipes formatean la vista (Los datos). No tocan la lógica original.
+
+Consta de :
+
+- El decorador @Pipe
+- La clase (o Función)
+- El método
+- Inyección de dependencias (Opcional).
+
+### 1. El decorador @Pipe
+
+Le indica a Angular que es un pipe.
+
+- name: El indicador que se usa en el HTML (ej: {{ texto | mypipe }}). Debe ser unico.
+- standalone: En Angular moderno se utiliza para importalo directamente en los componentes.
+- pure: Define si el pipe se recálcula automaticamente o solo cuando la entrada cambia.
+
+### 2. La clase (o Función)
+
+Implementa la interfaz PipeTransform. Es una clase simple que contiene la lógica.
+
+### 3. El método transfor(valor, ...args)
+
+Es el corazón del pipe.
+
+- Parámetro 1 (value): el dato de entrada.
+- Parámetros adicionales (...args): Son los argumentos que se pasanen en el HTML separado por dos puntos (:).
+- Retorno: Devuelve el dato ya transformado.
+
+### 4. Inyección de dependencias (Opcional)
+
+Un pipe puede usar inject() para acceder a servicios, pero se desaconseja para pipes puros, ya que se puede generar problemas de rendimiento. Si se necesita un servicio, usar un pipe impuro con mucha precaución.
+
